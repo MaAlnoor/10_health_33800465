@@ -1,28 +1,28 @@
-# Berties Books
+Fitness Tracker App
 
-Sample code for Dynamic Web Applications module.
+Sample coursework project for the Dynamic Web Applications module.
 
-Uses node.js with Express and EJS.
+Uses Node.js, Express, EJS, and MySQL.
 
 To install and run:
 
 npm install
 node index.js
 
-
-# Dotenv
+Dotenv
 
 Install dotenv:
 
 npm install dotenv
 
 
-Create a .env file in the project root and add the database configuration:
+Create a .env file in the project root and add the database configuration exactly as required by the assignment:
 
-DB_HOST=localhost
-DB_USER=berties_books_app
-DB_PASSWORD=your_password_here
-DB_NAME=berties_books
+HEALTH_HOST=localhost
+HEALTH_USER=health_app
+HEALTH_PASSWORD=qwertyuiop
+HEALTH_DATABASE=health
+HEALTH_BASE_PATH=http://localhost:8000
 
 
 Add .env to .gitignore so it is never committed to GitHub.
@@ -34,27 +34,109 @@ require('dotenv').config();
 
 All database credentials are now accessed securely using:
 
-process.env.DB_HOST
-process.env.DB_USER
-process.env.DB_PASSWORD
-process.env.DB_NAME
+process.env.HEALTH_HOST
+process.env.HEALTH_USER
+process.env.HEALTH_PASSWORD
+process.env.HEALTH_DATABASE
 
-# Audit
+Features Added
 
-An audit logging feature was added to track all login attempts in the application. A new database table named audit_log was created to store the username, whether the attempt was successful or failed, and the time of the attempt. The login route was updated so that every successful login inserts a record with a status of "SUCCESS", and every failed login inserts a record with "FAIL".
+I created a full fitness-tracking application where users can log their workouts and monitor progress. The app includes:
 
-A new route /users/audit was implemented to retrieve all the audit entries from the database and display them in a table using the audit.ejs view. This allows administrators to view the full history of login activity, including repeated failed attempts or suspicious behaviour.
+User Accounts
+
+A full registration and login system using hashed passwords (bcrypt).
+Login is required to access any workout-related features.
+Successful and failed login attempts display clear feedback messages.
+
+I added a default user gold / smiths as required by the assignment.
+
+Workout Tracking
+
+Users can:
+
+Add workouts (name, duration, intensity, calories, notes)
+
+View a complete history of workouts
+
+Search workouts by name
+
+View statistics (total minutes and total calories)
+
+Only logged-in users can access these pages. This prevents unauthenticated access and mirrors the behaviour of the protected pages in the labs.
+
+API
+
+I added a JSON API at:
+
+/api/workouts
 
 
-I added access control to the search page, audit page, bargain books page, and add-book page so only logged-in users can access them. The About and Register pages remain public because users can not log in if they are not registered and new users would want to see what the website is about. Testing confirmed that protected pages redirect unauthenticated users to the login page, while logged-in users can access them normally.
+This returns all workouts in JSON format, similar to the books API in the sample code.
+It can be used for testing or integration with other tools.
 
+Access Control
 
-I added server-side validation to the pages where users submit information, such as the registration form, login form and the book-adding page. These checks make sure users enter valid details — for example, the username has the right length, the email is valid, the password is at least 8 characters, and book details are filled in properly. I didn’t add validation to simple pages like the About page or pages that don’t take any user input, such as the book list or bargain books. The goal was to ensure the important forms are safe and reliable without overcomplicating the rest of the site.
+To protect user data, I added access control so that only logged-in users can access:
 
-I added sanitisation to all free-text fields on the registration form, including the first name, last name, and username fields, to protect the site from XSS attacks and ensure that no harmful HTML or script code can be submitted. I did not apply sanitisation to the email or password fields; the email is validated separately using express-validator, and passwords must not be modified before hashing. This approach protects user input where necessary without breaking important fields that rely on exact values.
+Add Workout page
 
-I added sanitisation to any part of the site where users can submit free-text input, such as the registration form (first name, last name, username), the add-book form (book name). These fields could otherwise be used to inject HTML or JavaScript, so sanitisation helps protect against XSS attacks. I did not sanitise fields like passwords, emails, prices, or system values, because these need to stay unchanged for hashing, validation, or database accuracy. Only the fields that present an actual XSS risk were sanitised.
+Workout List
 
-I added a weather feature at /weather/now that uses the OpenWeatherMap API to show the current temperature, humidity and wind information for a chosen city, with a text box that lets the user change the city and reload the data. 
+Workout Search
 
-I also a JSON books API at /api/books, which returns all books by default but supports optional query parameters: search to filter books by title (for example http://localhost:8000/api/books?search=world), minprice and max_price to filter by a price range (for example http://localhost:8000/api/books?minprice=5&max_price=10), and sort to sort the results by name or price (for example http://localhost:8000/api/books?sort=price).
+Workout Statistics
+
+Just like the lab exercises, unauthenticated users are redirected to the login page, while registered and logged-in users can navigate normally.
+
+Validation
+
+I added server-side validation to all user-submitted forms, including:
+
+Registration
+
+Login
+
+Add Workout
+
+The checks ensure details are valid — for example, usernames must be long enough, emails must be valid, and workout fields must contain correct numeric values.
+
+Validation prevents malformed entries while keeping the interface simple.
+
+Sanitisation
+
+I added sanitisation to all free-text fields:
+
+First name
+
+Last name
+
+Username
+
+Workout name
+
+Notes
+
+These fields could be used to inject harmful HTML or JavaScript, so sanitisation protects the application from XSS attacks.
+
+I deliberately did not sanitise passwords or numeric fields, because:
+
+Passwords must remain unchanged so they can be hashed correctly
+
+Numbers should not be altered by HTML escaping
+
+Only fields that present an actual security risk were sanitised.
+
+Additional Features
+
+I added a workout statistics page showing:
+
+Total minutes exercised
+
+Total calories burned
+
+This gives the user a simple overview of their fitness progress.
+
+I also added search functionality so users can quickly locate previous workouts, similar to the book-search feature in Bertie’s Books.
+
+The app includes a JSON endpoint for workouts, which demonstrates API design and the use of dynamic SQL filtering.
