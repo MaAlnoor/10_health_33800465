@@ -5,6 +5,13 @@ const { check, validationResult } = require('express-validator');
 
 const redirectLogin = (req, res, next) => {
     if (!req.session.userId) {
+
+        // If on university server, redirect there
+        if (req.headers.host.includes("doc.gold.ac.uk")) {
+            return res.redirect("/usr/442/users/login");
+        }
+
+        // Otherwise you're on localhost
         return res.redirect("/users/login");
     }
     next();
@@ -50,7 +57,10 @@ router.post('/registered', [
             db.query(sqlquery, newUser, (err) => {
                 if (err) return next(err);
 
-                res.send(`Hello ${req.body.first}, you are registered!`);
+                res.send(
+                    'Hello ' + req.sanitize(req.body.first) + ', you are now registered! ' +
+                    '<a href="/">Home</a>'
+                );                
             });
         });
     });
@@ -82,7 +92,10 @@ router.post('/loggedin', [
 
             if (result === true) {
                 req.session.userId = req.body.username;
-                return res.send(`Welcome back ${results[0].first_name}!`);
+                return res.send(
+                    "Welcome back " + results[0].first_name + " " + results[0].last_name +
+                    "! <a href='/'>Home</a>"
+                );
             } else {
                 return res.send("Invalid username or password.");
             }

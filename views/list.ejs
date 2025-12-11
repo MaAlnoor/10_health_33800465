@@ -12,9 +12,12 @@
 <% workouts.forEach(function(w) { %>
     <li>
         <strong><%= w.workout_name %></strong>  
-        — <%= w.duration %> min 
+        — <%= w.duration %> min  
         — intensity: <%= w.intensity %>  
-        — calories: <%= w.calories %>
+        — calories: <%= w.calories %>  
+        <% if (w.notes && w.notes.trim() !== "") { %>
+            — notes: <%= w.notes %>
+        <% } %>
     </li>
 <% }) %>
 </ul>
