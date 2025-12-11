@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+<head>
+    <title>Your Workouts</title>
+    <link rel="stylesheet" type="text/css" href="/main.css" />
+</head>
+<body>
+
+<h1>Your Workout History</h1>
+
+<ul>
+<% workouts.forEach(function(w) { %>
+    <li>
+        <strong><%= w.workout_name %></strong>  
+        — <%= w.duration %> min 
+        — intensity: <%= w.intensity %>  
+        — calories: <%= w.calories %>
+    </li>
+<% }) %>
+</ul>
+
+</body>
+</html>

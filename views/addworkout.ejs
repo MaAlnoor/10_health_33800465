@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head>
+    <title>Add Workout</title>
+    <link rel="stylesheet" type="text/css" href="/main.css" />
+</head>
+<body>
+
+<h1>Add a Workout</h1>
+
+<form method="POST" action="/workouts/added">
+    <p>Workout Name: <input type="text" name="workout_name" /></p>
+    <p>Duration (minutes): <input type="number" name="duration" min="1" /></p>
+    <p>Intensity (1–10): <input type="number" name="intensity" min="1" max="10" /></p>
+    <p>Calories Burned: <input type="number" name="calories" min="0" /></p>
+    <p>Notes: <input type="text" name="notes" /></p>
+    <input type="submit" value="Add Workout" />
+</form>
+
+</body>
+</html>
